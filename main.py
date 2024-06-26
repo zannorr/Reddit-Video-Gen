@@ -4,11 +4,13 @@ from fetchAudio import text_to_speech, combine_audio_files, audio_length
 from fetchVideo import download_youtube_video
 from titleImage import capture_title_image
 from cleanup import delete_specific_folders_in_current_directory
+from subtitleGen import transcription
 
 temp_dir = ['titleImage', 'VideoFiles', 'AudioFiles', 'AggregatedAudio', 'ClippedVideo']
 if __name__ == '__main__':
-    print('Welcome to Reddit video creation')
-
+    print('Welcome to generative short video creation!')
+    print('-'*50)
+    
     reddit_url = input('What is the link of the reddit thread? ')
     youtube_url = input('What is the link for the youtube video? ')
 
@@ -26,7 +28,8 @@ if __name__ == '__main__':
 
     cropped_video_path = crop_to_vertical(clipped_video_path)
 
-    combine_video_audio_picture(cropped_video_path, aggregated_comments_audio, title_path)
-
-    delete_specific_folders_in_current_directory(temp_dir)
+    output_path = combine_video_audio_picture(cropped_video_path, aggregated_comments_audio, title_path)
+    # create subtitles
+    transcription(output_path)
+    # delete_specific_folders_in_current_directory(temp_dir)
 

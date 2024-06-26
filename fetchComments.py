@@ -9,4 +9,5 @@ def fetch_comment_text(reddit_url):
     comments = [comment.body for comment in submission.comments if isinstance(comment, praw.models.Comment)]
     selected_comments = random.sample(comments, min(5, len(comments)))
     selected_comments.insert(0, submission.title)
+    print('Successfully fetched comments')
     return selected_comments

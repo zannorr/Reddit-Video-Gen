@@ -39,11 +39,11 @@ def capture_title_image(reddit_url):
         os.makedirs('titleImage')
 
     # Capture a screenshot of the located element
-    screenshot_path = 'titleImage//reddit_post_screenshot.png'
+    screenshot_path = os.path.join('titleImage', 'reddit_post_screenshot.png')
     post_element.screenshot(screenshot_path)
 
     # Close the browser
     browser.quit()
 
-    print(f"Screenshot saved to {screenshot_path}")
+    print(f"Screenshot successfully saved...")
     return screenshot_path
