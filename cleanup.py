@@ -2,7 +2,6 @@ import os
 import shutil
 import psutil
 import time
-
 def find_and_kill_processes_using_file(file_path):
     for proc in psutil.process_iter(['pid', 'name']):
         try:
@@ -41,3 +40,4 @@ def delete_specific_folders_in_current_directory(folders_to_delete, retries=3, d
                         time.sleep(delay)
                     else:
                         print(f"Failed to delete {item_path} after {retries} attempts: {e}")
+    print('Restarting application. Please Reopen and continue.')

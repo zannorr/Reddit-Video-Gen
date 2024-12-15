@@ -1,19 +1,18 @@
-from moviepy.editor import *
+from moviepy import VideoFileClip, ImageClip, AudioFileClip, CompositeVideoClip
 from fetchAudio import audio_length
 import os
-title_comment = 'AudioFiles\comment_0.mp3'
+
+title_comment = 'Audio\comment_0.mp3'
 
 def clip_video(video_path, start_time, end_time):
     if not os.path.exists('ClippedVideo'):
         os.makedirs('ClippedVideo')
     output_path = os.path.join('ClippedVideo', 'clippedVideo.mp4')
-    with VideoFileClip(video_path) as video:
-        clipped = video.subclip(start_time, end_time)
-        clipped.write_videofile(output_path, codec='libx264', bitrate = '5000k')
+    clip = VideoFileClip(video_path)
+    clip = clip.subclipped(start_time, end_time)
+    clip.write_videofile(output_path)
     return output_path
 
-import os
-from moviepy.editor import VideoFileClip
 
 def crop_to_vertical(input_file, target_width=1080, target_height=1920):
     if not os.path.exists('FinalVideo'):
@@ -40,8 +39,8 @@ def crop_to_vertical(input_file, target_width=1080, target_height=1920):
     y_center = (new_height - target_height) / 2 if new_height > target_height else 0
     
     # Resize and crop the video
-    clip = clip.resize((new_width, new_height))
-    clip = clip.crop(x_center, y_center, width=target_width, height=target_height)
+    clip = clip.resized((new_width, new_height))
+    clip = clip.cropped(x_center, y_center, width=target_width, height=target_height)
     
     # Write the cropped video to the output file with higher bitrate
     clip.write_videofile(output_file, codec="libx264", fps=24, bitrate="5000k")
@@ -50,11 +49,11 @@ def crop_to_vertical(input_file, target_width=1080, target_height=1920):
 
 def combine_video_audio_picture(video_path, audio_path, title_path):
     output_path = os.path.join('FinalVideo', 'finalVideo.mp4')
-    title_clip = ImageClip(title_path).resize(2).set_duration(audio_length(title_comment))
+    title_clip = ImageClip(title_path).resized(2).with_duration(audio_length(title_comment))
     audio_clip = AudioFileClip(audio_path)
     video_clip = VideoFileClip(video_path)
     
-    composite_clip = CompositeVideoClip([video_clip.set_audio(audio_clip), title_clip.set_position(("center", "center"))])
+    composite_clip = CompositeVideoClip([video_clip.with_audio(audio_clip), title_clip.with_position(("center", "center"))])
 
     composite_clip.write_videofile(output_path, codec='libx264', fps=24, bitrate = '5000k')
 

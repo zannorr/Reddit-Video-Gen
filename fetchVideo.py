@@ -1,31 +1,25 @@
-from pytube import YouTube
+import yt_dlp
 import os
-
-def download_youtube_video(url, output_dir='VideoFiles'):
-    # Create directory if it does not exist
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+def download_youtube_video(youtube_url, output_path='VideoFiles', custom_title='full_video'):
     try:
-        yt = YouTube(url)
+        ydl_opts = {
+            'format': 'best',  # Download best quality
+        }
+        
+        if output_path:
+            if custom_title:
+                ydl_opts['outtmpl'] = f'{output_path}/{custom_title}.%(ext)s'
+            else:
+                ydl_opts['outtmpl'] = f'{output_path}/%(title)s.%(ext)s'
+        elif custom_title:
+            ydl_opts['outtmpl'] = f'{custom_title}.%(ext)s'
+            
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([youtube_url])
+            
+        print("Download completed!")
+        
     except Exception as e:
-        print('Connection Error:', e)
-        return None
+        print("An error occurred:", str(e))
 
-    # Filter streams and select the highest resolution mp4 stream
-    mp4_streams = yt.streams.filter(file_extension='mp4').order_by('resolution').desc()
-    if not mp4_streams:
-        print("No mp4 streams available.")
-        return None
-
-    dl_video = mp4_streams.first()
-
-    # Define the complete output path including the filename
-    output_path = os.path.join(output_dir, 'full_video.mp4')
-    try:
-        dl_video.download(output_path=output_dir, filename='full_video.mp4')
-        print('Download successful.')
-    except Exception as e:
-        print("Error downloading video:", e)
-        return None
-
-    return output_path
+    return os.path.join(output_path, f'{custom_title}.mp4')

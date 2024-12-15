@@ -2,9 +2,7 @@ import os, io
 from gtts import gTTS
 from pydub import AudioSegment
 from pydub.utils import which
-from moviepy.editor import AudioFileClip
-
-AudioSegment.converter = which("ffmpeg")
+from moviepy import AudioFileClip
 
 def text_to_speech(comments):
     if not os.path.exists('Audio'): os.makedirs('Audio')
@@ -24,7 +22,8 @@ def combine_mp3(mp3_files, comment_path):
     print(mp3_path)
     combined_mp3 = AudioSegment.from_mp3(mp3_path)
     for file in mp3_files[1:]:
-        next_file = AudioSegment.from_mp3(file)
+        next_file_path = os.path.join(comment_path, file)
+        next_file = AudioSegment.from_mp3(next_file_path)
         combined_mp3 += next_file
     combined_mp3.export(final_output_path, format = 'mp3')
     return final_output_path

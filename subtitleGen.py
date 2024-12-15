@@ -1,5 +1,5 @@
 import whisper
-from moviepy.editor import VideoFileClip
+from moviepy import VideoFileClip
 import ffmpeg
 import os
 # Load the Whisper model
@@ -10,7 +10,7 @@ def transcription(video_path):
     video = VideoFileClip(video_path)
 
     # Extract audio from video
-    audio_path = os.path.join('AggregatedAudio', 'temp_audio.wav')
+    audio_path = os.path.join('AllAudio', 'temp_audio.wav')
     video.audio.write_audiofile(audio_path, codec='pcm_s16le')
 
     # Transcribe audio
